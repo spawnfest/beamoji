@@ -11,7 +11,7 @@ init(#{translator := Translator}, _) ->
 
 %% @todo Replace this by the actual desired emojification of atoms.
 -spec format_file(file:filename_all(),
-                  beamoji_translator:'🗺'(),
+                  beamoji_translator:'🫖'(),
                   rebar3_formatter:opts()) ->
                      rebar3_formatter:result().
 format_file(File, State, OptionsMap) ->

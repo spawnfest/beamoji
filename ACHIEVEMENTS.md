@@ -9,6 +9,8 @@
     * For composite emojis, like ⚛ and ⚛️, depending on what character you write after the simple one (⚛), it gets displayed as the complex one and your character disappears.
 - [x] Franz.
     * The opposite as Sublime Text, it always displays the basic emoji.
+- [x] Dialyzer. [erlang/otp#5210](https://github.com/erlang/otp/issues/5210)
+    * Having an opaque type with an emoji breaks the pretty printing of errors.
 
 # Limits Found
 
