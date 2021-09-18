@@ -9,8 +9,8 @@
 
 parse_transform(Forms0, Options) ->
     #{translator_mod := TranslatorMod} = Options,
-    TranslatorState = TranslatorMod:'🐣'(),
-    TranslatorFn = fun TranslatorMod:'⏩'/2,
+    TranslatorState = beamoji_translator:'🐣'(TranslatorMod),
+    TranslatorFn = fun beamoji_translator:'⏩'/2,
     State = #{translator_fn => TranslatorFn, translator_state => TranslatorState},
     {Forms, _NewState} = ast_walk:forms(Forms0, fun walker/2, State),
     Forms.
