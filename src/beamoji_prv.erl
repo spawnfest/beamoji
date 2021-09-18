@@ -7,13 +7,13 @@
 -spec init(rebar_state:t()) -> {ok, rebar_state:t()}.
 init(State) ->
     Provider =
-        providers:create([{name, '🪄'},
+        providers:create([{name, 'emojify'},
                           {module, beamoji_prv},
                           {bare, true},
                           {deps, []},
                           {example, "rebar3 🪄"},
                           {opts, []},
-                          {short_desc, "🪄 ⇢ 🤯"},
+                          {short_desc, "blow your mind with emojis"},
                           {desc, "🪄📜 ⇢ 📃✨ ⇢ 🤯"}]),
     {ok, rebar_state:add_provider(State, Provider)}.
 
@@ -21,7 +21,7 @@ init(State) ->
 %% @todo Implement this function
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()}.
 do(State) ->
-    rebar_api:warn("🪄 called ⚠️", []),
+    rebar_api:warn("emojify called", []),
     {ok, State}.
 
 %% @private
