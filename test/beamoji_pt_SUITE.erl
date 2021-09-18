@@ -12,9 +12,7 @@ data_dir(Config) ->
     proplists:get_value(data_dir, Config).
 
 identity_pt(Config) ->
-    DataDir = data_dir(Config),
-    ModPath = filename:join(DataDir, "pt_test_1.erl"),
-    {ok, Forms} = epp:parse_file(ModPath, []),
+    Forms = parse_test_module(Config, "pt_test_1.erl"),
     Opts = [],
     TransformedForms = beamoji_pt:parse_transform(Forms, Opts),
     Forms = TransformedForms.
