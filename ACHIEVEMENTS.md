@@ -8,5 +8,5 @@
 
 # Limits Found
 
-- [ ] **Erlang/OTP**.
+- [x] **Erlang/OTP**.
     * Module names with non-latin1 characters are not supported

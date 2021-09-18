@@ -18,7 +18,6 @@ init(State) ->
     {ok, rebar_state:add_provider(State, Provider)}.
 
 %% @private
-%% @todo Implement this function
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()}.
 do(State) ->
     rebar_api:info("emojifying your code...", []),
