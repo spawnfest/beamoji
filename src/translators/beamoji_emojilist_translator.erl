@@ -43,20 +43,20 @@
 
 -ifdef(TEST).
 
-'⏩_test'() ->
-    State = '🐣'(),
-    ?assertEqual(smile, beamoji_emojilist_translator:'⏪'('😄', State)),
-    ?assertEqual(true, beamoji_emojilist_translator:'⏪'('✔️', State)),
-    ?assertEqual(false, beamoji_emojilist_translator:'⏪'('❌', State)),
-    ?assertEqual(undefined, beamoji_emojilist_translator:'⏪'('👻', State)),
-    ok.
-
 '⏪_test'() ->
     State = '🐣'(),
-    ?assertEqual('😄', beamoji_emojilist_translator:'⏩'(smile, State)),
-    ?assertEqual('✔️', beamoji_emojilist_translator:'⏩'(true, State)),
-    ?assertEqual('❌', beamoji_emojilist_translator:'⏩'(false, State)),
-    ?assertEqual('👻', beamoji_emojilist_translator:'⏩'(undefined, State)),
+    ?assertEqual(smile, '⏪'('😄', State)),
+    ?assertEqual(true, '⏪'('✔️', State)),
+    ?assertEqual(false, '⏪'('❌', State)),
+    ?assertEqual(undefined, '⏪'('👻', State)),
+    ok.
+
+'⏩_test'() ->
+    State = '🐣'(),
+    ?assertEqual('😄', '⏩'(smile, State)),
+    ?assertEqual('✔️', '⏩'(true, State)),
+    ?assertEqual('❌', '⏩'(false, State)),
+    ?assertEqual('👻', '⏩'(undefined, State)),
     ok.
 
 -endif.
