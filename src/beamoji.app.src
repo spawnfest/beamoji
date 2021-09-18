@@ -6,5 +6,5 @@
   {applications, [kernel, stdlib, rebar3_format]},
   {env, []},
   {modules, []},
-  {licenses, ["MIT"]},
+  {licenses, ["🤓"]},
   {links, [{"github", "https://github.com/spawnfest/beamoji"}]}]}.
