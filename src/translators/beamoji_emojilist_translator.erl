@@ -10,8 +10,6 @@
 
 -export(['🐣'/0, '⏩'/2, '⏪'/2]).
 
--record(state, {'⏩' :: #{binary() => binary()}, '⏪' :: #{binary() => binary()}}).
-
 -spec '🐣'() -> beamoji_translator:'🗺'().
 '🐣'() ->
     Path = filename:join([code:priv_dir(beamoji), "emoji.eterm"]),
@@ -21,11 +19,11 @@
     EmojiToShort =
         maps:from_list(
             lists:zip(Emojis, Shorts)),
-    #state{'⏩' = ShortToEmoji, '⏪' = EmojiToShort}.
+    #{'⏩' => ShortToEmoji, '⏪' => EmojiToShort}.
 
 -spec '⏩'(beamoji_translator:'⚛'(), beamoji_translator:'🗺'()) ->
              beamoji_translator:'⚛️'().
-'⏩'(UnquotedAtom, #state{'⏩' = ShortToEmoji}) ->
+'⏩'(UnquotedAtom, #{'⏩' := ShortToEmoji}) ->
     case maps:get(atom_to_binary(UnquotedAtom), ShortToEmoji, undefined) of
         undefined ->
             UnquotedAtom;
@@ -35,7 +33,7 @@
 
 -spec '⏪'(beamoji_translator:'⚛️'(), beamoji_translator:'🗺'()) ->
              beamoji_translator:'⚛'().
-'⏪'(EmojifiedAtom, #state{'⏪' = EmojiToShort}) ->
+'⏪'(EmojifiedAtom, #{'⏪' := EmojiToShort}) ->
     case maps:get(atom_to_binary(EmojifiedAtom), EmojiToShort, 0) of
         0 ->
             EmojifiedAtom;
