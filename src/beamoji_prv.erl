@@ -7,7 +7,7 @@
 -spec init(rebar_state:t()) -> {ok, rebar_state:t()}.
 init(State) ->
     Provider =
-        providers:create([{name, 'emojify'},
+        providers:create([{name, emojify},
                           {module, beamoji_prv},
                           {bare, true},
                           {deps, []},
