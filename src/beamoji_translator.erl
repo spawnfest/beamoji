@@ -1,22 +1,28 @@
 -module(beamoji_translator).
 
--export(['🐣'/1, '⏩'/3, '⏪'/3]).
+-export(['🐣'/1, '⏩'/2, '⏪'/2]).
 
+-type '🗣'() :: module().
 -type '⚛'() :: atom().
 -type '⚛️'() :: atom().
 -type '🗺'() :: map().
 
--export_type(['⚛'/0, '⚛️'/0, '🗺'/0]).
+-opaque '🫖'() :: #{'🗣' := '🗣'(), '🗺' := '🗺'()}.
+
+-export_type(['⚛'/0, '⚛️'/0, '🗺'/0, '🫖'/0]).
 
 -callback '🐣'() -> '🗺'().
 -callback '⏩'('⚛'(), '🗺'()) -> '⚛️'().
 -callback '⏪'('⚛️'(), '🗺'()) -> '⚛'().
 
+-spec '🐣'('🗣'()) -> '🫖'().
 '🐣'(Translator) ->
-    Translator:'🐣'().
+    #{'🗣' => Translator, '🗺' => Translator:'🐣'()}.
 
-'⏩'(UnquotedAtom, Translator, State) ->
+-spec '⏩'('⚛'(), '🫖'()) -> '⚛️'().
+'⏩'(UnquotedAtom, #{'🗣' := Translator, '🗺' := State}) ->
     Translator:'⏩'(UnquotedAtom, State).
 
-'⏪'(EmojifiedAtom, Translator, State) ->
+-spec '⏪'('⚛️'(), '🫖'()) -> '⚛'().
+'⏪'(EmojifiedAtom, #{'🗣' := Translator, '🗺' := State}) ->
     Translator:'⏪'(EmojifiedAtom, State).
