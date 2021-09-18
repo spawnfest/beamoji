@@ -1,1 +1,1 @@
-%% @todo Implement this
+-compile({parse_transform, beamoji_pt}).
