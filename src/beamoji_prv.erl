@@ -18,11 +18,13 @@ init(State) ->
     {ok, rebar_state:add_provider(State, Provider)}.
 
 %% @private
-%% @todo Implement this function
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()}.
 do(State) ->
-    rebar_api:warn("emojify called", []),
-    {ok, State}.
+    rebar_api:info("emojifying your code...", []),
+    FormatOptions = rebar_state:get(State, format, []),
+    NewState =
+        rebar_state:set(State, format, [{formatter, beamoji_formatter} | FormatOptions]),
+    rebar3_format_prv:do(NewState).
 
 %% @private
 -spec format_error(any()) -> binary().

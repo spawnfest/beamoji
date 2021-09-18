@@ -14,7 +14,7 @@
 ### ⏭
 
 ```bash
-$ rebar3 🪄
+$ rebar3 emojify
 ```
 
 ## 👷
