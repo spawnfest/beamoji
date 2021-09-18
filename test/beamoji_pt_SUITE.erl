@@ -1,6 +1,6 @@
 -module(beamoji_pt_SUITE).
 
--compile(export_all).
+-export([all/0, identity_pt/1, walker_works/1]).
 
 all() ->
     [identity_pt, walker_works].

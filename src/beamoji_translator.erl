@@ -1,6 +1,7 @@
 -module(beamoji_translator).
 
 -export(['🐣'/1, '⏩'/2, '⏪'/2]).
+-export(['🗣'/1]).
 
 -type '🗣'() :: module().
 -type '⚛'() :: atom().
@@ -26,3 +27,7 @@
 -spec '⏪'('⚛️'(), '🫖'()) -> '⚛'().
 '⏪'(EmojifiedAtom, #{'🗣' := Translator, '🗺' := State}) ->
     Translator:'⏪'(EmojifiedAtom, State).
+
+-spec '🗣'('🫖'()) -> '🗣'().
+'🗣'(#{'🗣' := Translator}) ->
+    Translator.
