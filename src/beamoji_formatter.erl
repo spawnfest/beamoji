@@ -5,7 +5,7 @@
 -export([init/2, format_file/3]).
 
 -spec init(rebar3_formatter:opts(), undefined | rebar_state:t()) ->
-              beamoji_translator:'🗺'().
+              beamoji_translator:'🫖'().
 init(#{translator := Translator}, _) ->
     beamoji_translator:'🐣'(Translator).
 
