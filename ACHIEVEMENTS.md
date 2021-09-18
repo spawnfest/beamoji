@@ -11,6 +11,8 @@
     * The opposite as Sublime Text, it always displays the basic emoji.
 - [x] Dialyzer. [erlang/otp#5210](https://github.com/erlang/otp/issues/5210)
     * Having an opaque type with an emoji breaks the pretty printing of errors.
+- [x] rebar3_format.
+    * Custom attributes with emojis will be formatted without quotes the first time and as an error the second time. [AdRoll/rebar3_format#283](https://github.com/AdRoll/rebar3_format/issues/283)
 
 # Limits Found
 
