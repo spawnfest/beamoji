@@ -2,11 +2,6 @@
 
 -export([parse_transform/2, parse_transform_info/0, walker/2]).
 
--type '👀'() :: term().
-
-% Brujo would be proud
--callback walker('👀'(), '👀'()) -> {'👀'(), '👀'()}.
-
 parse_transform(Forms0, _Options) ->
     State = update_translator(#{}, beamoji_id_translator),
     {Forms, _NewState} = ast_walk:forms(Forms0, fun walker/2, State),

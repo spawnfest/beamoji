@@ -19,14 +19,15 @@ init(#{translator := Translator}, _) ->
                   rebar3_formatter:opts()) ->
                      rebar3_formatter:result().
 format_file(File, State, Opts) ->
-    {ok, AST} = get_ast(File, Opts),
+    {ok, AST} = get_ast(File, State, Opts),
+    Comments = erl_comment_scan:file(File),
+    WithComments = erl_recomment:recomment_forms(AST, Comments),
     {Result, Formatted} =
-        case ensure_translator_attributes(AST, State) of
+        case ensure_translator_attributes(WithComments, State) of
             {ok, NewAST} ->
-                Comments = erl_comment_scan:file(File),
                 rebar_api:info("emojifying ~ts your code with ~p...",
                                [File, beamoji_translator:'🗣'(State)]),
-                {changed, format(File, NewAST, Comments, Opts)};
+                {changed, format(File, NewAST, Opts)};
             {error, not_a_module} ->
                 {ok, Original} = file:read_file(File),
                 {unchanged, Original};
@@ -40,15 +41,17 @@ format_file(File, State, Opts) ->
     _ = maybe_save_file(maps:get(output_dir, Opts), File, Formatted),
     Result.
 
-get_ast(File, Opts) ->
+get_ast(File, State, Opts) ->
     DodgerOpts =
-        [{scan_opts, [text]}, no_fail, compact_strings]
+        [{scan_opts, [text]},
+         no_fail,
+         compact_strings,
+         {post_fixer, fun(Tokens) -> emojify(Tokens, State) end}]
         ++ [parse_macro_definitions || maps:get(parse_macro_definitions, Opts, true)],
     ktn_dodger:parse_file(File, DodgerOpts).
 
-format(File, AST, Comments, Opts) ->
-    WithComments = erl_recomment:recomment_forms(AST, Comments),
-    Formatted = default_formatter:format(WithComments, empty_lines(File), Opts),
+format(File, AST, Opts) ->
+    Formatted = default_formatter:format(AST, empty_lines(File), Opts),
     insert_last_line(iolist_to_binary(Formatted)).
 
 empty_lines(File) ->
@@ -92,7 +95,8 @@ insert_last_line(Formatted) ->
             <<Formatted/binary, "\n">>
     end.
 
-ensure_translator_attributes(Nodes, State) ->
+ensure_translator_attributes(FormList, State) ->
+    Nodes = erl_syntax:form_list_elements(FormList),
     Includes =
         [concrete(IncludePath)
          || Node <- Nodes,
@@ -114,7 +118,7 @@ ensure_same_translator(Nodes, Translator) ->
              FoundTranslator <- erl_syntax:attribute_arguments(Node)]
     of
         [Translator | _] ->
-            {ok, Nodes};
+            {ok, erl_syntax:form_list(Nodes)};
         _ ->
             {error, translator_mismatch}
     end.
@@ -139,7 +143,9 @@ add_translator_attributes(Nodes, Translator) ->
                     erl_syntax:attribute(
                         erl_syntax:atom(include_lib), [erl_syntax:string(?HRL_PATH)]),
                     Pos),
-            {ok, BeforeModule ++ [Module, TranslatorAttr, IncludeLibAttr | AfterModule]}
+            {ok,
+             erl_syntax:form_list(BeforeModule
+                                  ++ [Module, TranslatorAttr, IncludeLibAttr | AfterModule])}
     end.
 
 attr_name(Node) ->
@@ -153,3 +159,18 @@ concrete(Node) ->
         _:_ ->
             Node
     end.
+
+emojify({atom, Anno, Atom}, State) ->
+    NewAtom = translate(State, Atom),
+    {form, {atom, Anno, NewAtom}};
+emojify({function, Anno, Name, Arity, Clauses}, State) when is_atom(Name) ->
+    NewName = translate(State, Name),
+    {form, {function, Anno, NewName, Arity, Clauses}};
+emojify({attribute, Anno, export, Es}, State) ->
+    NewEs = [{translate(State, Name), Arity} || {Name, Arity} <- Es],
+    {form, {attribute, Anno, export, NewEs}};
+emojify(_Token, _State) ->
+    no_fix.
+
+translate(State, Atom) ->
+    beamoji_translator:'⏩'(Atom, State).
