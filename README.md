@@ -39,7 +39,14 @@ cd ./beamojilib/
 echo "" >> rebar.config
 echo '{project_plugins, [beamoji]}.' >> rebar.config
 wget https://raw.githubusercontent.com/spawnfest/beamoji/%E2%93%82%EF%B8%8F/test/beamoji_roundtrip_SUITE_data/emojifyme.erl -O src/emojifyme.erl
+head -n 25 src/emojifyme.erl
 rebar3 emojify
+head -n 25 src/emojifyme.erl
+rebar3 shell
+```
+
+```erlang
+emojifyme:sum([1, 2, 3, 4]).
 ```
 
 ## 🧩
