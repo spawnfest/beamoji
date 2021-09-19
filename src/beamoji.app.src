@@ -1,10 +1,11 @@
 {application,
  beamoji,
  [{description, "🪄"},
-  {vsn, "0.0.1"},
+  {vsn, "0.1.0"},
   {registered, []},
   {applications, [kernel, stdlib, rebar3_format]},
   {env, []},
   {modules, []},
-  {licenses, ["🤓"]},
+  {maintainers,["Brujo Benavides", "Manuel Rubio", "Mariano Guerra"]},
+  {licenses, ["MIT"]},
   {links, [{"github", "https://github.com/spawnfest/beamoji"}]}]}.
