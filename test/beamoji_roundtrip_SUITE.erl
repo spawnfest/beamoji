@@ -37,7 +37,7 @@ get_ast(File) ->
 
 files(DataDir) ->
     filelib:wildcard(
-        filename:join(DataDir, "*.erl")).
+        filename:join(DataDir, "**/*.erl")).
 
 initialize_rebar(DataDir) ->
     ok = file:set_cwd(DataDir),
@@ -53,8 +53,8 @@ initialize_rebar(DataDir) ->
 diff(Original, New) ->
     Changes =
         lists:zipwith(fun({File, OldAST}, {File, NewAST}) ->
-                         CleanOldAST = remove_line_numbers(OldAST),
-                         CleanNewAST = remove_line_numbers(NewAST),
+                         CleanOldAST = remove_known_attrs(remove_line_numbers(OldAST)),
+                         CleanNewAST = remove_known_attrs(remove_line_numbers(NewAST)),
                          #{file => File,
                            new => CleanNewAST -- CleanOldAST,
                            old => CleanOldAST -- CleanNewAST}
@@ -72,3 +72,15 @@ remove_line_numbers(AST) when is_tuple(AST) ->
     list_to_tuple([Type, '#' | remove_line_numbers(Rest)]);
 remove_line_numbers(AST) ->
     AST.
+
+remove_known_attrs(AST) ->
+    lists:filter(fun is_unknown_attr/1, AST).
+
+is_unknown_attr({attribute, '#', beamoji_translator, _}) ->
+    false;
+is_unknown_attr({attribute, '#', file, {_, '#'}}) ->
+    false;
+is_unknown_attr({attribute, '#', compile, {parse_transform, '#'}}) ->
+    false;
+is_unknown_attr(_) ->
+    true.
