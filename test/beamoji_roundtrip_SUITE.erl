@@ -8,9 +8,7 @@
          beamoji_id_translator/1, beamoji_multiword_translator/1]).
 
 all() ->
-    [beamoji_baseemoji_translator,
-     beamoji_emojilist_translator,
-     beamoji_id_translator].
+    [beamoji_baseemoji_translator, beamoji_emojilist_translator, beamoji_id_translator].
 
 init_per_suite(Config) ->
     {ok, OldPath} = file:get_cwd(),
