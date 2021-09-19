@@ -18,7 +18,7 @@
         lists:foldl(fun(Emoji, {I, To, From}) ->
                        {I + 1, maps:put(I, Emoji, To), maps:put(Emoji, I, From)}
                     end,
-                    {1, #{}, #{}},
+                    {0, #{}, #{}},
                     BaseEmoji),
     #{'⏩' => ToBaseEmoji, '⏪' => FromBaseEmoji}.
 
