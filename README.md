@@ -38,3 +38,6 @@ rebar3 new lib name=beamojilib
 cd ./beamojilib/
 echo '\n{project_plugins, [{beamoji, {git, "git://github.com/spawnfest/beamoji.git", {branch, "Ⓜ️"}}}]}.' >> rebar.config
 ```
+
+## 🧩
+https://quiz.elixircards.co.uk/BEAMoji
