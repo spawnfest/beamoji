@@ -160,6 +160,8 @@ concrete(Node) ->
             Node
     end.
 
+emojify({function, _, '?preprocessor declaration?', _, _}, _Translator) ->
+    no_fix;
 emojify(AST, Translator) ->
     case ast_walk:form(AST, fun walker/2, Translator) of
         {AST, _} ->
@@ -168,11 +170,6 @@ emojify(AST, Translator) ->
             {form, NewAST}
     end.
 
-walker(_Translator, AST = {function, F, '?preprocessor declaration?', _, _}) ->
-    %% Don't translate preprocessor macros at all.
-    rebar_api:warn("preprocessor declaration: ~p", [F]),
-    IdTranslator = beamoji_translator:'🐣'(beamoji_id_translator),
-    {AST, IdTranslator};
 walker(Translator, AST) ->
     Translate = fun(Atom) -> translate(Translator, Atom) end,
     NewAST = beamoji_utils:'🪄'(Translate, AST),
