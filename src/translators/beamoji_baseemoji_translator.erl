@@ -18,7 +18,7 @@
         lists:foldl(fun(Emoji, {I, To, From}) ->
                        {I + 1, maps:put(I, Emoji, To), maps:put(Emoji, I, From)}
                     end,
-                    {0, #{}, #{}},
+                    {1, #{}, #{}},
                     BaseEmoji),
     #{'⏩' => ToBaseEmoji, '⏪' => FromBaseEmoji}.
 
@@ -40,18 +40,18 @@
 
 '⏪_test'() ->
     State = '🐣'(),
-    ?assertEqual(smile, '⏪'('🎨😏😀🍈📆', State)),
-    ?assertEqual(true, '⏪'('🌔💊🥕📆', State)),
-    ?assertEqual(false, '⏪'('🤕💚🍈🎨📆', State)),
-    ?assertEqual(undefined, '⏪'('🥕🤔🎴📆🤕😀🤔📆🎴', State)),
+    ?assertEqual(smile, '⏪'('🆘🧉📱🦙👀', State)),
+    ?assertEqual(true, '⏪'('🦖🌈🦄👀', State)),
+    ?assertEqual(false, '⏪'('🔥🍎🦙🆘👀', State)),
+    ?assertEqual(undefined, '⏪'('🦄🆕🐕️👀🔥📱🆕👀🐕️', State)),
     ok.
 
 '⏩_test'() ->
     State = '🐣'(),
-    ?assertEqual('🎨😏😀🍈📆', '⏩'(smile, State)),
-    ?assertEqual('🌔💊🥕📆', '⏩'(true, State)),
-    ?assertEqual('🤕💚🍈🎨📆', '⏩'(false, State)),
-    ?assertEqual('🥕🤔🎴📆🤕😀🤔📆🎴', '⏩'(undefined, State)),
+    ?assertEqual('🆘🧉📱🦙👀', '⏩'(smile, State)),
+    ?assertEqual('🦖🌈🦄👀', '⏩'(true, State)),
+    ?assertEqual('🔥🍎🦙🆘👀', '⏩'(false, State)),
+    ?assertEqual('🦄🆕🐕️👀🔥📱🆕👀🐕️', '⏩'(undefined, State)),
     ok.
 
 -endif.
