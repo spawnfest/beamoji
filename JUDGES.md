@@ -53,7 +53,7 @@ the relations :)
 
 This is the "hard" translator since it takes more work to guess.
 
-### Multiword
+#### Multiword
 
 Splits atoms on the underscore character and tries to replace each word with an
 emoji, it doesn't replace most atoms, but atoms composed of multiple words look
