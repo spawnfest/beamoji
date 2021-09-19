@@ -33,7 +33,7 @@
              beamoji_translator:'⚛'().
 '⏪'(EmojifiedAtom, #{'⏪' := FromBaseEmoji}) ->
     Letters = atom_to_list(EmojifiedAtom),
-    Emojis = [maps:get(<<X/utf8>>, FromBaseEmoji) || X <- Letters],
+    Emojis = [maps:get(<<X/utf8>>, FromBaseEmoji, X) || X <- Letters],
     binary_to_atom(iolist_to_binary(Emojis)).
 
 -ifdef(TEST).
