@@ -21,7 +21,7 @@ opts() ->
     [{translator,
       $🗣,
       "translator",
-      {atom, beamoji_id_translator},
+      {atom, beamoji_emojilist_translator},
       "Translator module to use when emojifying the code"}].
 
 %% @private
@@ -41,7 +41,7 @@ do(State) ->
 
 get_translator(State) ->
     {Args, _} = rebar_state:command_parsed_args(State),
-    proplists:get_value(translator, Args, beamoji_id_translator).
+    proplists:get_value(translator, Args, beamoji_emojilist_translator).
 
 %% @private
 -spec format_error(any()) -> binary().

@@ -1,5 +1,7 @@
 -module(beamoji_pt_SUITE).
 
+-behaviour(ct_suite).
+
 -export([all/0, identity_pt/1, walker_works/1, walker_attr_updates_translator/1,
          beamoji_attr_updates_translator/1]).
 
