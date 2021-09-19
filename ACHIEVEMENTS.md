@@ -22,3 +22,10 @@
 
 - [x] **Erlang/OTP**.
     * Module names with non-latin1 characters are not supported
+
+# Projects Improved
+
+- [x] `eflambe`
+    * [spawnfest/eflambe#1](https://github.com/spawnfest/eflambe/pull/1)
+- [x] `eArangoDB`
+    * [spawnfest/eArangoDB](https://github.com/spawnfest/eArangoDB/pull/1) 
