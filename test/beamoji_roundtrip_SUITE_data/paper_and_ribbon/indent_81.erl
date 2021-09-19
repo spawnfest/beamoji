@@ -140,7 +140,7 @@ when_clause(A, B, C)
         the:guard(
                 should:be(
                         indented_using:sub_indent(1)));
-when_clause(Along, Blonb, Clong)
+when_clause(Along, Blong, Clong)
         when is_integer(Along),
              Along >= Blong
              andalso Clong rem Along =:= Blong ->

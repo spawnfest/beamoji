@@ -16,12 +16,12 @@ g() ->
     t.
 
 %% @doc Can't be parsed
--spec a_module : ?FOO( ) -> t( ) .
+-spec macros_in_specs : ?FOO( ) -> t( ) .
 
 foo() ->
     t.
 
 %% @doc Was crashing the formatter
--spec h() -> a_module:?FOO().
+-spec h() -> macros_in_specs:?FOO().
 h() ->
     foo.

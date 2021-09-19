@@ -1,4 +1,4 @@
--module(should_be_in_parentheses).
+-module(attrs).
 
 -export([should/1, have_parentheses/0]).
 
@@ -14,6 +14,8 @@
 
 -this_one_the_formater_should ignore.
 
--spec should(Not) -> have:parentheses().
+-spec should('not') -> have:parentheses().
 should(Not) ->
     have:parentheses().
+
+have_parentheses() -> have_parentheses.

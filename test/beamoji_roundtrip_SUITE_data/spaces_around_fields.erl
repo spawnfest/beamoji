@@ -5,6 +5,7 @@
 -export([f/1]).
 
 -record(a, {small, with}).
+-record(just, {one}).
 
 -type a() :: #a{ small :: record, with :: {some, fields} }.
 -type b() ::
