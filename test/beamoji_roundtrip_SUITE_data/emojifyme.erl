@@ -5,6 +5,9 @@
          join/2, mean/1, binary_search/4, sort/3, qsort/1, fibonacci/1,
          factorial/1, hanoi/4]).
 
+af() ->
+    {error, false, ok, true}.
+
 append([E]) ->
     E;
 append([H | T]) ->
