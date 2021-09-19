@@ -33,7 +33,7 @@
              beamoji_translator:'⚛'().
 '⏪'(EmojifiedAtom, #{'⏪' := FromBaseEmoji}) ->
     Letters = atom_to_list(EmojifiedAtom),
-    Emojis = [maps:get(<<X/utf8>>, FromBaseEmoji, X) || X <- Letters],
+    Emojis = [maps:get(<<X/utf8>>, FromBaseEmoji) || X <- Letters],
     binary_to_atom(iolist_to_binary(Emojis)).
 
 -ifdef(TEST).
@@ -43,7 +43,7 @@
     ?assertEqual(smile, '⏪'('🆘🧉📱🦙👀', State)),
     ?assertEqual(true, '⏪'('🦖🌈🦄👀', State)),
     ?assertEqual(false, '⏪'('🔥🍎🦙🆘👀', State)),
-    ?assertEqual(undefined, '⏪'('🦄🆕🐕️👀🔥📱🆕👀🐕️', State)),
+    ?assertEqual(undefined, '⏪'('🦄🆕🐶👀🔥📱🆕👀🐶', State)),
     ok.
 
 '⏩_test'() ->
@@ -51,7 +51,7 @@
     ?assertEqual('🆘🧉📱🦙👀', '⏩'(smile, State)),
     ?assertEqual('🦖🌈🦄👀', '⏩'(true, State)),
     ?assertEqual('🔥🍎🦙🆘👀', '⏩'(false, State)),
-    ?assertEqual('🦄🆕🐕️👀🔥📱🆕👀🐕️', '⏩'(undefined, State)),
+    ?assertEqual('🦄🆕🐶👀🔥📱🆕👀🐶', '⏩'(undefined, State)),
     ok.
 
 -endif.
