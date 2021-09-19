@@ -7,8 +7,6 @@
 -spec '🪄'(translator(), erl_parse:abstract_form()) -> erl_parse:abstract_form().
 '🪄'(Translator, {atom, Anno, Atom}) ->
     {atom, Anno, Translator(Atom)};
-'🪄'(_Translator, Ast = {function, _, '?preprocessor declaration?', _, _}) ->
-    Ast;
 '🪄'(Translator, {function, Anno, Name, Arity, Clauses}) when is_atom(Name) ->
     {function, Anno, Translator(Name), Arity, Clauses};
 '🪄'(Translator, {attribute, Anno, record, {Name, Fields}}) when is_atom(Name) ->

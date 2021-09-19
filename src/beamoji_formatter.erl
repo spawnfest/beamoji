@@ -18,15 +18,15 @@ init(#{translator := Translator}, _) ->
                   beamoji_translator:'🫖'(),
                   rebar3_formatter:opts()) ->
                      rebar3_formatter:result().
-format_file(File, State, Opts) ->
-    {ok, AST} = get_ast(File, State, Opts),
+format_file(File, Translator, Opts) ->
+    {ok, AST} = get_ast(File, Translator, Opts),
     Comments = erl_comment_scan:file(File),
     WithComments = erl_recomment:recomment_forms(AST, Comments),
     {Result, Formatted} =
-        case ensure_translator_attributes(WithComments, State) of
+        case ensure_translator_attributes(WithComments, Translator) of
             {ok, NewAST} ->
                 rebar_api:info("emojifying ~ts your code with ~p...",
-                               [File, beamoji_translator:'🗣'(State)]),
+                               [File, beamoji_translator:'🗣'(Translator)]),
                 {changed, format(File, NewAST, Opts)};
             {error, not_a_module} ->
                 {ok, Original} = file:read_file(File),
@@ -41,12 +41,12 @@ format_file(File, State, Opts) ->
     _ = maybe_save_file(maps:get(output_dir, Opts), File, Formatted),
     Result.
 
-get_ast(File, State, Opts) ->
+get_ast(File, Translator, Opts) ->
     DodgerOpts =
         [{scan_opts, [text]},
          no_fail,
          compact_strings,
-         {post_fixer, fun(Tokens) -> emojify(Tokens, State) end}]
+         {post_fixer, fun(Tokens) -> emojify(Tokens, Translator) end}]
         ++ [parse_macro_definitions || maps:get(parse_macro_definitions, Opts, true)],
     ktn_dodger:parse_file(File, DodgerOpts).
 
@@ -160,23 +160,28 @@ concrete(Node) ->
             Node
     end.
 
-emojify(AST, State) ->
-    case ast_walk:form(AST, fun walker/2, State) of
+emojify(AST, Translator) ->
+    case ast_walk:form(AST, fun walker/2, Translator) of
         {AST, _} ->
             no_fix;
         {NewAST, _} ->
             {form, NewAST}
     end.
 
-walker(State, AST) ->
-    Translate = fun(Atom) -> translate(State, Atom) end,
+walker(_Translator, AST = {function, F, '?preprocessor declaration?', _, _}) ->
+    %% Don't translate preprocessor macros at all.
+    rebar_api:warn("preprocessor declaration: ~p", [F]),
+    IdTranslator = beamoji_translator:'🐣'(beamoji_id_translator),
+    {AST, IdTranslator};
+walker(Translator, AST) ->
+    Translate = fun(Atom) -> translate(Translator, Atom) end,
     NewAST = beamoji_utils:'🪄'(Translate, AST),
-    {NewAST, State}.
+    {NewAST, Translator}.
 
-translate(State, Atom) ->
+translate(Translator, Atom) ->
     case iolist_to_binary(io_lib:format("~p", [Atom])) of
         <<$', _/binary>> -> % a quoted atom
             Atom;
         _ ->
-            beamoji_translator:'⏩'(Atom, State)
+            beamoji_translator:'⏩'(Atom, Translator)
     end.
