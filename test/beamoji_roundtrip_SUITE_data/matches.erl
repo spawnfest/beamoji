@@ -1,3 +1,5 @@
+-module(matches).
+
 -compile(export_all).
 
 -format #{paper => 80, ribbon => 75}.

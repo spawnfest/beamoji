@@ -106,7 +106,7 @@ multi_try_expr() ->
             formatter:should(indent, A, Catch, Expression)
     end.
 
-long_case_of() ->
+long_case_of(ServerAndTable, Name) ->
     case whereis(ServerAndTable) =/= undefined
          orelse counter_sup:start_child([ServerAndTable, Name])
     of
@@ -114,7 +114,7 @@ long_case_of() ->
             thong
     end.
 
-long_try_of() ->
+long_try_of(ServerAndTable, Name) ->
     try whereis(ServerAndTable) =/= undefined
         orelse counter_sup:start_child([ServerAndTable, Name])
     of

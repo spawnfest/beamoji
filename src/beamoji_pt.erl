@@ -18,20 +18,10 @@ update_translator(State0, TranslatorMod) ->
 walker(State, Ast = {attribute, _Anno, beamoji_translator, TranslatorMod}) ->
     NewState = update_translator(State, TranslatorMod),
     {Ast, NewState};
-walker(State, {atom, Anno, Atom}) ->
-    NewAtom = translate(State, Atom),
-    NewAst = {atom, Anno, NewAtom},
-    {NewAst, State};
-walker(State, {function, Anno, Name, Arity, Clauses}) when is_atom(Name) ->
-    NewName = translate(State, Name),
-    NewAst = {function, Anno, NewName, Arity, Clauses},
-    {NewAst, State};
-walker(State, {attribute, Anno, export, Es}) ->
-    NewEs = [{translate(State, Name), Arity} || {Name, Arity} <- Es],
-    NewAst = {attribute, Anno, export, NewEs},
-    {NewAst, State};
 walker(State, Ast) ->
-    {Ast, State}.
+    Translate = fun(Atom) -> translate(State, Atom) end,
+    NewAst = beamoji_utils:'🪄'(Translate, Ast),
+    {NewAst, State}.
 
 translate(State, Atom) ->
     #{translator_fn := TranslatorFn, translator_state := TranslatorState} = State,

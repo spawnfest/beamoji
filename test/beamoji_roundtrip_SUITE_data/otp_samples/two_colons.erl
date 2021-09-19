@@ -1,4 +1,4 @@
--module(rec).
+-module(two_colons).
 
 -record(typed_record_field, {typed :: record_field}).
 
@@ -9,3 +9,4 @@
 -type rec() :: #rec{record_type_field :: w}.
 
 -spec x(Constraint, AnnotatedType :: annotated_type) -> w when Constraint :: constraint.
+x(_,_) -> w.

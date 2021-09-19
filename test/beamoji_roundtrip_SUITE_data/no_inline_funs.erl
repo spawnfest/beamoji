@@ -1,4 +1,4 @@
--module(funs).
+-module(no_inline_funs).
 
 -format #{inline_simple_funs => false}.
 

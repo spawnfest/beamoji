@@ -160,17 +160,18 @@ concrete(Node) ->
             Node
     end.
 
-emojify({atom, Anno, Atom}, State) ->
-    NewAtom = translate(State, Atom),
-    {form, {atom, Anno, NewAtom}};
-emojify({function, Anno, Name, Arity, Clauses}, State) when is_atom(Name) ->
-    NewName = translate(State, Name),
-    {form, {function, Anno, NewName, Arity, Clauses}};
-emojify({attribute, Anno, export, Es}, State) ->
-    NewEs = [{translate(State, Name), Arity} || {Name, Arity} <- Es],
-    {form, {attribute, Anno, export, NewEs}};
-emojify(_Token, _State) ->
-    no_fix.
+emojify(AST, State) ->
+    case ast_walk:form(AST, fun walker/2, State) of
+        {AST, _} ->
+            no_fix;
+        {NewAST, _} ->
+            {form, NewAST}
+    end.
+
+walker(State, AST) ->
+    Translate = fun(Atom) -> translate(State, Atom) end,
+    NewAST = beamoji_utils:'🪄'(Translate, AST),
+    {NewAST, State}.
 
 translate(State, Atom) ->
     case iolist_to_binary(io_lib:format("~p", [Atom])) of

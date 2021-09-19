@@ -1,13 +1,26 @@
 -module(function_composition_inline).
 
+-define(AND_MACROS, and_macros).
+-define(MACROS, macros).
+
 -export([local_calls/3, external_calls/0]).
 
 -format #{inline_qualified_function_composition => true}.
 
--type t() :: only:function(application:is(affected(by:this(change)))) | not_types.
+-type t() :: only:function(application:is(a:ffected(by:this(change)))) | not_types.
 
 local_calls(should, be, unaffected) ->
     g(f(b, h(a), w(x(y)))).
+
+g(X) -> X.
+f(X,Y,Z) -> {X,Y,Z}.
+h(X) -> X.
+w(X) -> X.
+x(X) -> X.
+macros(X) -> X.
+this_one(X) -> X.
+more(X) -> X.
+is(X,Y,Z) -> {X,Y,Z}.
 
 external_calls() ->
     shouldnt:be(indented:every(singe:time([{even, "when", including}]),
