@@ -2,11 +2,15 @@
 
 -behaviour(ct_suite).
 
--export([all/0, init_per_suite/1, end_per_suite/1]).
--export([roundtrip/1]).
+-export([all/0, init_per_suite/1, end_per_suite/1, init_per_testcase/2,
+         end_per_testcase/2]).
+-export([beamoji_baseemoji_translator/1, beamoji_emojilist_translator/1,
+         beamoji_id_translator/1, beamoji_multiword_translator/1]).
 
 all() ->
-    [roundtrip].
+    [beamoji_baseemoji_translator,
+     beamoji_emojilist_translator,
+     beamoji_id_translator].
 
 init_per_suite(Config) ->
     {ok, OldPath} = file:get_cwd(),
@@ -17,16 +21,48 @@ end_per_suite(Config) ->
         file:set_cwd(
             proplists:get_value(old_path, Config)).
 
-roundtrip(Config) ->
+init_per_testcase(TestCase, Config) ->
     DataDir = proplists:get_value(data_dir, Config),
-    OriginalASTs = get_asts(DataDir),
-    State = initialize_rebar(DataDir),
+    Files = files(DataDir),
+    TestDir = filename:join(DataDir, atom_to_list(TestCase)),
+    file:make_dir(TestDir),
+    lists:foreach(fun(File) ->
+                     {ok, _} = file:copy(File, filename:join(TestDir, filename:basename(File)))
+                  end,
+                  Files),
+    ok = file:set_cwd(TestDir),
+    Config.
+
+end_per_testcase(_TestCase, Config) ->
+    {ok, Cwd} = file:get_cwd(),
+    DataDir = proplists:get_value(data_dir, Config),
+    ok = file:set_cwd(DataDir),
+    ok = file:del_dir_r(Cwd),
+    Config.
+
+beamoji_baseemoji_translator(_Config) ->
+    roundtrip(beamoji_baseemoji_translator).
+
+beamoji_emojilist_translator(_Config) ->
+    roundtrip(beamoji_emojilist_translator).
+
+beamoji_id_translator(_Config) ->
+    roundtrip(beamoji_id_translator).
+
+%% @todo Make this one work. It still has some edge cases.
+beamoji_multiword_translator(_Config) ->
+    roundtrip(beamoji_multiword_translator).
+
+roundtrip(Translator) ->
+    {ok, Cwd} = file:get_cwd(),
+    OriginalASTs = get_asts(Cwd),
+    State = initialize_rebar(Translator),
     {ok, _} = beamoji_prv:do(State),
-    [] = diff(OriginalASTs, get_asts(DataDir)),
+    [] = diff(OriginalASTs, get_asts(Cwd)),
     ok.
 
-get_asts(DataDir) ->
-    lists:map(fun get_ast/1, files(DataDir)).
+get_asts(Cwd) ->
+    lists:map(fun get_ast/1, files(Cwd)).
 
 get_ast(File) ->
     IncludePath =
@@ -35,20 +71,19 @@ get_ast(File) ->
     {ok, Forms} = epp:parse_file(File, [{includes, [IncludePath]}]),
     {File, beamoji_pt:parse_transform(Forms, [])}.
 
-files(DataDir) ->
+files(Dir) ->
     filelib:wildcard(
-        filename:join(DataDir, "**/*.erl")).
+        filename:join(Dir, "**/*.erl")).
 
-initialize_rebar(DataDir) ->
-    ok = file:set_cwd(DataDir),
+initialize_rebar(Translator) ->
     {ok, State1} =
         beamoji:init(
             rebar_state:new()),
     {ok, State2} = rebar_prv_app_discovery:do(State1),
-    Files = {files, files(DataDir)},
+    {ok, Cwd} = file:get_cwd(),
+    Files = {files, files(Cwd)},
     State3 = rebar_state:set(State2, format, [Files]),
-    rebar_state:command_parsed_args(State3,
-                                    {[{translator, beamoji_baseemoji_translator}], something}).
+    rebar_state:command_parsed_args(State3, {[{translator, Translator}], something}).
 
 diff(Original, New) ->
     Changes =
