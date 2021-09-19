@@ -13,6 +13,8 @@
     * Having an opaque type with an emoji breaks the pretty printing of errors.
 - [x] rebar3_format.
     * Custom attributes with emojis will be formatted without quotes the first time and as an error the second time. [AdRoll/rebar3_format#283](https://github.com/AdRoll/rebar3_format/issues/283)
+- [x] common_test. [erlang/otp#5212](https://github.com/erlang/otp/issues/5212)
+    *  Mismatches with emojis crash the test when they're attempted to be printed out.
 
 # Limits Found
 

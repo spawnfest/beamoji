@@ -131,7 +131,8 @@ add_translator_attributes(Nodes, Translator) ->
     of
         {[], _All} ->
             {error, not_a_module};
-        {BeforeModule, [Module | AfterModule]} ->
+        {BeforeModule, AfterModule} ->
+            Module = lists:last(BeforeModule),
             Pos = erl_syntax:get_pos(Module),
             TranslatorAttr =
                 erl_syntax:set_pos(
@@ -144,8 +145,7 @@ add_translator_attributes(Nodes, Translator) ->
                         erl_syntax:atom(include_lib), [erl_syntax:string(?HRL_PATH)]),
                     Pos),
             {ok,
-             erl_syntax:form_list(BeforeModule
-                                  ++ [Module, TranslatorAttr, IncludeLibAttr | AfterModule])}
+             erl_syntax:form_list(BeforeModule ++ [TranslatorAttr, IncludeLibAttr | AfterModule])}
     end.
 
 attr_name(Node) ->
@@ -173,4 +173,9 @@ emojify(_Token, _State) ->
     no_fix.
 
 translate(State, Atom) ->
-    beamoji_translator:'⏩'(Atom, State).
+    case iolist_to_binary(io_lib:format("~p", [Atom])) of
+        <<$', _/binary>> -> % a quoted atom
+            Atom;
+        _ ->
+            beamoji_translator:'⏩'(Atom, State)
+    end.
