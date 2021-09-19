@@ -25,7 +25,7 @@ format_file(File, Translator, Opts) ->
     {Result, Formatted} =
         case ensure_translator_attributes(WithComments, Translator) of
             {ok, NewAST} ->
-                rebar_api:info("emojifying ~ts your code with ~p...",
+                rebar_api:info("emojifying ~ts with ~p...",
                                [File, beamoji_translator:'🗣'(Translator)]),
                 {changed, format(File, NewAST, Opts)};
             {error, not_a_module} ->
