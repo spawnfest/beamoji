@@ -32,26 +32,33 @@
 -spec '⏪'(beamoji_translator:'⚛️'(), beamoji_translator:'🗺'()) ->
              beamoji_translator:'⚛'().
 '⏪'(EmojifiedAtom, #{'⏪' := FromBaseEmoji}) ->
-    Letters = atom_to_list(EmojifiedAtom),
-    Emojis = [maps:get(<<X/utf8>>, FromBaseEmoji, X) || X <- Letters],
-    binary_to_atom(iolist_to_binary(Emojis)).
+    CodePoints = string:to_graphemes(atom_to_list(EmojifiedAtom)),
+    Emojis = lists:map(fun characters_to_binary/1, CodePoints),
+    Letters = [maps:get(X, FromBaseEmoji, X) || X <- Emojis],
+    binary_to_atom(iolist_to_binary(Letters)).
+
+characters_to_binary(A) when is_integer(A) ->
+    unicode:characters_to_binary([A]);
+characters_to_binary(L) when is_list(L) ->
+    unicode:characters_to_binary(L).
 
 -ifdef(TEST).
 
 '⏪_test'() ->
     State = '🐣'(),
-    ?assertEqual(smile, '⏪'('🎨😏😀🍈📆', State)),
-    ?assertEqual(true, '⏪'('🌔💊🥕📆', State)),
-    ?assertEqual(false, '⏪'('🤕💚🍈🎨📆', State)),
-    ?assertEqual(undefined, '⏪'('🥕🤔🎴📆🤕😀🤔📆🎴', State)),
+    ?assertEqual(smile, '⏪'('🆘🧉📱🦙👀', State)),
+    ?assertEqual(true, '⏪'('🦖🌈🦄👀', State)),
+    ?assertEqual(false, '⏪'('🔥🍎🦙🆘👀', State)),
+    ?assertEqual(undefined, '⏪'('🦄🆕🐶👀🔥📱🆕👀🐶', State)),
+    ?assertEqual(should, '⏪'('🆘❤️🆗🦄🦙🐶', State)),
     ok.
 
 '⏩_test'() ->
     State = '🐣'(),
-    ?assertEqual('🎨😏😀🍈📆', '⏩'(smile, State)),
-    ?assertEqual('🌔💊🥕📆', '⏩'(true, State)),
-    ?assertEqual('🤕💚🍈🎨📆', '⏩'(false, State)),
-    ?assertEqual('🥕🤔🎴📆🤕😀🤔📆🎴', '⏩'(undefined, State)),
+    ?assertEqual('🆘🧉📱🦙👀', '⏩'(smile, State)),
+    ?assertEqual('🦖🌈🦄👀', '⏩'(true, State)),
+    ?assertEqual('🔥🍎🦙🆘👀', '⏩'(false, State)),
+    ?assertEqual('🦄🆕🐶👀🔥📱🆕👀🐶', '⏩'(undefined, State)),
     ok.
 
 -endif.
