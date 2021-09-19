@@ -1,4 +1,9 @@
 -module(emojifyme).
+-export([append/1, reverse/1, nth/2, prefix/2, last/1, sum/1, duplicate/2,
+         min/1, max/2, delete/2, zip/2, flatten/2, enumerate/2, all/2, any/2,
+         map/2, flatmap/2, filter/2, foldl/3, foreach/2, search/2, split/2,
+         join/2, mean/1, binary_search/4, sort/3, qsort/1, fibonacci/1,
+         factorial/1, hanoi/4]).
 
 append([E]) ->
     E;
